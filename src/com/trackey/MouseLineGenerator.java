@@ -1,7 +1,10 @@
 package com.trackey;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,23 +12,17 @@ import java.util.Collection;
 public class MouseLineGenerator {
     static Color lineColour = new Color(255,255,255); //White
 
-    void generateImage(ArrayList<Point> points)
-    {
+    void generateImage(ArrayList<Point> points) throws IOException {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         BufferedImage newImage = new BufferedImage(screenSize.width, screenSize.height, BufferedImage.TYPE_INT_RGB);
 
         ArrayList<Point> tempPoints = new ArrayList<>();
-        tempPoints.add(new Point(1,1));
-        tempPoints.add(new Point(6,6));
-        tempPoints.add(new Point(9,7));
-        tempPoints.add(new Point(15,8));
-        tempPoints.add(new Point(22,11));
-        tempPoints.add(new Point(30,14));
-        tempPoints.add(new Point(50,23));
-        tempPoints.add(new Point(59,0));
-        tempPoints.add(new Point(23,50));
-        tempPoints.add(new Point(100,100));
-        tempPoints.add(new Point(900,900));
+        tempPoints.add(new Point(500,500));
+        tempPoints.add(new Point(700,700));
+        tempPoints.add(new Point(500,899));
+        tempPoints.add(new Point(300,700));
+        tempPoints.add(new Point(500,500));
+
 
         points = tempPoints;
 
@@ -34,19 +31,41 @@ public class MouseLineGenerator {
             newImage.setRGB(points.get(i).x, points.get(i).y, lineColour.getRGB());
             ArrayList<Point> linePoints = new ArrayList<>();
             linePoints = generateLines(points.get(i), points.get(i+1));
+/*            for (int j = 0; j < linePoints.size(); j++)
+            {
+                System.out.println(linePoints.get(j));
+                newImage.setRGB(linePoints.get(j).x, linePoints.get(j).y, lineColour.getRGB());
+                System.out.println("drawn \n");
+            }*/
         }
 
+        File outputFile = new File("mouse.png");
+        ImageIO.write(newImage, "png", outputFile);
     }
 
     ArrayList<Point> generateLines(Point pointA, Point pointB) //uses brenseham
     {
+
+
+        if (pointA.x > pointB.x){
+            Point tempPoint = new Point();
+            tempPoint = pointB;
+            pointB = pointA;
+            pointA = tempPoint;
+        }
         ArrayList<Point> pointList = new ArrayList<>();
         int m_new = 2 * (pointB.y - pointA.y);
         int slope_error_new = m_new - (pointA.x-pointB.x);
 
-        for (int x = pointA.x, y = pointA.y; x < pointB.x; x++)
-        {
-            pointList.add(new Point(x,y));
+        for (int x = pointA.x, y = pointA.y; x < pointB.x; x++) {
+            pointList.add(new Point(x, y));
+
+            slope_error_new += m_new;
+
+            if (slope_error_new >= 0) {
+                y++;
+                slope_error_new -= 2 * (pointB.x - pointA.x);
+            }
         }
         return pointList;
 
