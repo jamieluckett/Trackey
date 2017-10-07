@@ -29,7 +29,6 @@ public class MouseLineGenerator {
 
         for (int i = 0; i < points.size(); i++)
         {
-
         }
 
     }
