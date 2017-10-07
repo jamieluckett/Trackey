@@ -17,34 +17,35 @@ class MouseControl {
 
     private static final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
+    final Runnable beeper = new Runnable() {
 
-    public static void main(String args[]) {
-            final Runnable beeper = new Runnable() {
+        public void run() {
+            mouseArrayList.add(mg.getMouseLocation());
 
-                public void run() {
-                    mouseArrayList.add(mg.getMouseLocation());
+        }
+    };
 
-                }
-            };
+    ScheduledFuture<?> beeperHandle =
+            scheduler.scheduleAtFixedRate(beeper, 10, 100, MILLISECONDS);
 
-            final ScheduledFuture<?> beeperHandle =
-                    scheduler.scheduleAtFixedRate(beeper, 10, 100, MILLISECONDS);
-
-            scheduler.schedule(new Runnable() {
-                public void run() {beeperHandle.cancel(true);
-                    mouseArrayList.forEach(System.out::println);
-                    MouseLineGenerator mlg = new MouseLineGenerator();
-                    try {
-                        mlg.generateImage(mouseArrayList);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("dONE");
-                }
-            }, 5, SECONDS);
-
-
+    public void startMouseTracking(){
+        beeperHandle = scheduler.scheduleAtFixedRate(beeper, 10, 100, MILLISECONDS);
     }
+    public void callMouseImageGenerator(){
+        // stop the mouse thread and then restart it afterwards
+        beeperHandle.cancel(true);
+        mouseArrayList.forEach(System.out::println);
+        MouseLineGenerator mlg = new MouseLineGenerator();
+        try {
+            mlg.generateImage(mouseArrayList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("dONE");
+    }
+
+
+
     }
 
 
