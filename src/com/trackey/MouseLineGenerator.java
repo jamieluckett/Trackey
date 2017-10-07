@@ -10,11 +10,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MouseLineGenerator {
-    static Color lineColour = new Color(255,255,255); //White
+    static Color lineColour = new Color(51,181,229); //blue
+    static Color bkgrndColour = new Color(55,55,55); //grey
+
 
     void generateImage(ArrayList<Point> points) throws IOException {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         BufferedImage newImage = new BufferedImage(screenSize.width, screenSize.height, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < screenSize.width; x++)
+        {
+            for (int y = 0; y < screenSize.height; y++)
+            {
+                newImage.setRGB(x,y,bkgrndColour.getRGB());
+            }
+        }
 
         ArrayList<Point> tempPoints = new ArrayList<>();
         tempPoints.add(new Point(500,500));
