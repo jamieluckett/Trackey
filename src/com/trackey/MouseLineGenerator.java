@@ -4,8 +4,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class MouseLineGenerator {
+    static Color lineColour = new Color(255,255,255); //White
 
     void generateImage(ArrayList<Point> points)
     {
@@ -27,14 +29,26 @@ public class MouseLineGenerator {
 
         points = tempPoints;
 
-        for (int i = 0; i < points.size(); i++)
+        for (int i = 0; i < points.size()-1; i++)
         {
+            newImage.setRGB(points.get(i).x, points.get(i).y, lineColour.getRGB());
+            ArrayList<Point> linePoints = new ArrayList<>();
+            linePoints = generateLines(points.get(i), points.get(i+1));
         }
 
     }
 
-    ArrayList<Point> generateLines(Point pointA, Point pointB)
+    ArrayList<Point> generateLines(Point pointA, Point pointB) //uses brenseham
     {
+        ArrayList<Point> pointList = new ArrayList<>();
+        int m_new = 2 * (pointB.y - pointA.y);
+        int slope_error_new = m_new - (pointA.x-pointB.x);
+
+        for (int x = pointA.x, y = pointA.y; x < pointB.x; x++)
+        {
+            pointList.add(new Point(x,y));
+        }
+        return pointList;
 
     }
 }
