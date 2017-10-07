@@ -24,10 +24,11 @@ public class MouseLineGenerator {
         tempPoints.add(new Point(500,500));
 
 
-        points = tempPoints;
+        //points = tempPoints;
 
         for (int i = 0; i < points.size()-1; i++)
         {
+
             newImage.setRGB(points.get(i).x, points.get(i).y, lineColour.getRGB());
             ArrayList<Point> linePoints = new ArrayList<>();
             linePoints = generateLines(points.get(i), points.get(i+1));
