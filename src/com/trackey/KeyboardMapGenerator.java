@@ -12,6 +12,7 @@ public class KeyboardMapGenerator
         int highestNumberOfPresses = 10;
         int step = 255/highestNumberOfPresses;
 
+        
         BufferedImage newImage = new BufferedImage(1024, 341, BufferedImage.TYPE_INT_RGB);
         Map locations = new HashMap<String, Point>();
         locations.put("Q", new Point(103, 69));
