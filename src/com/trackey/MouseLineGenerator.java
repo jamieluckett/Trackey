@@ -32,12 +32,12 @@ public class MouseLineGenerator {
             newImage.setRGB(points.get(i).x, points.get(i).y, lineColour.getRGB());
             ArrayList<Point> linePoints = new ArrayList<>();
             linePoints = generateLines(points.get(i), points.get(i+1));
-/*            for (int j = 0; j < linePoints.size(); j++)
+            for (int j = 0; j < linePoints.size(); j++)
             {
                 System.out.println(linePoints.get(j));
                 newImage.setRGB(linePoints.get(j).x, linePoints.get(j).y, lineColour.getRGB());
                 System.out.println("drawn \n");
-            }*/
+            }
         }
 
         File outputFile = new File("mouse.png");
@@ -46,29 +46,40 @@ public class MouseLineGenerator {
 
     ArrayList<Point> generateLines(Point pointA, Point pointB) //uses brenseham
     {
-
-
-        if (pointA.x > pointB.x){
-            Point tempPoint = new Point();
-            tempPoint = pointB;
-            pointB = pointA;
-            pointA = tempPoint;
-        }
         ArrayList<Point> pointList = new ArrayList<>();
-        int m_new = 2 * (pointB.y - pointA.y);
-        int slope_error_new = m_new - (pointA.x-pointB.x);
+        int x, x2, y, y2;
+        x = pointA.x;
+        x2 = pointB.x;
+        y = pointA.y;
+        y2 = pointB.y;
+        int w = x2 - x ;
+        int h = y2 - y ;
 
-        for (int x = pointA.x, y = pointA.y; x < pointB.x; x++) {
+        int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0 ;
+        if (w<0) dx1 = -1 ; else if (w>0) dx1 = 1 ;
+        if (h<0) dy1 = -1 ; else if (h>0) dy1 = 1 ;
+        if (w<0) dx2 = -1 ; else if (w>0) dx2 = 1 ;
+        int longest = Math.abs(w) ;
+        int shortest = Math.abs(h) ;
+        if (!(longest>shortest)) {
+            longest = Math.abs(h) ;
+            shortest = Math.abs(w) ;
+            if (h<0) dy2 = -1 ; else if (h>0) dy2 = 1 ;
+            dx2 = 0 ;
+        }
+        int numerator = longest >> 1 ;
+        for (int i=0;i<=longest;i++) {
             pointList.add(new Point(x, y));
-
-            slope_error_new += m_new;
-
-            if (slope_error_new >= 0) {
-                y++;
-                slope_error_new -= 2 * (pointB.x - pointA.x);
+            numerator += shortest;
+            if (!(numerator < longest)) {
+                numerator -= longest;
+                x += dx1;
+                y += dy1;
+            } else {
+                x += dx2;
+                y += dy2;
             }
         }
         return pointList;
-
     }
 }
